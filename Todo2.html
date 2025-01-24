@@ -1,0 +1,201 @@
+<script>
+    function addTask(day) {
+        const tableBody = document.getElementById(day + '-tasks');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td><input type="text" placeholder="Time"></td>
+            <td><input type="text" placeholder="Activity"></td>
+            <td><button onclick="removeTask(this)">Remove</button></td>
+        `;
+        tableBody.appendChild(newRow);
+    }
+
+    function removeTask(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Time Planification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #4CAF50; /* Green */
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #388E3C 3px solid; /* Darker Green */
+        }
+        header h1 {
+            text-align: center;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        .section-title {
+            background: #388E3C; /* Darker Green */
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #4CAF50; /* Green */
+            color: white;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            border: none;
+            background: #f4f4f4;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .reminder {
+            background: #ffcccb; /* Light Red */
+            padding: 10px;
+            margin-top: 10px;
+            border-left: 5px solid #ff0000; /* Red */
+        }
+        @media (max-width: 600px) {
+            th, td {
+                display: block;
+                width: 100%;
+            }
+            th {
+                text-align: right;
+            }
+            th::after {
+                content: ":";
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weekly Time Planification</h1>
+    </header>
+    <div class="container">
+        <div class="section-title">Weekly Goals</div>
+        <textarea rows="4" placeholder="Write your weekly goals here..."></textarea>
+        
+        <div class="section-title">Weekly Overview</div>
+        <textarea rows="4" placeholder="Write your weekly overview here..."></textarea>
+        
+        <div class="section-title">Daily Plan</div>
+        <table id="plan-table">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Activity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="Monday-tasks">
+                <!-- Monday -->
+                <tr>
+                    <td>Monday</td>
+                    <td><input type="text" value="6:00 AM - 7:00 AM"></td>
+                    <td><input type="text" value="Morning Routine & Baby Care"></td>
+                    <td><button onclick="removeTask(this)">Remove</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="text" value="7:00 AM - 9:00 AM"></td>
+                    <td><input type="text" value="PhD Research/Study"></td>
+                    <td><button onclick="removeTask(this)">Remove</button></td>
+                </tr>
+                <!-- Add more tasks as needed -->
+            </tbody>
+        </table>
+        <button onclick="addTask('Monday')">Add Task</button>
+        <button onclick="addDay()">Add Day</button>
+        <button onclick="removeDay('Monday')">Remove Monday</button>
+    </div>
+    <script>
+        function addTask(day) {
+            const tableBody = document.getElementById(day + '-tasks');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td></td>
+                <td><input type="text" placeholder="Time"></td>
+                <td><input type="text" placeholder="Activity"></td>
+                <td><button onclick="removeTask(this)">Remove</button></td>
+            `;
+            tableBody.appendChild(newRow);
+        }
+
+        function removeTask(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function addDay() {
+            const table = document.getElementById('plan-table');
+            const newDay = prompt("Enter the name of the new day:");
+            if (newDay) {
+                const newDayBody = document.createElement('tbody');
+                newDayBody.id = newDay + '-tasks';
+                newDayBody.innerHTML = `
+                    <tr>
+                        <td>${newDay}</td>
+                        <td><input type="text" placeholder="Time"></td>
+                        <td><input type="text" placeholder="Activity"></td>
+                        <td><button onclick="removeTask(this)">Remove</button></td>
+                    </tr>
+                `;
+                table.appendChild(newDayBody);
+                const addTaskButton = document.createElement('button');
+                addTaskButton.textContent = `Add Task to ${newDay}`;
+                addTaskButton.id = `add-task-${newDay}`;
+                addTaskButton.onclick = () => addTask(newDay);
+                document.querySelector('.container').appendChild(addTaskButton);
+                const removeDayButton = document.createElement('button');
+                removeDayButton.textContent = `Remove ${newDay}`;
+                removeDayButton.id = `remove-day-${newDay}`;
+                removeDayButton.onclick = () => removeDay(newDay);
+                document.querySelector('.container').appendChild(removeDayButton);
+            }
+        }
+
+        function removeDay(day) {
+            const dayBody = document.getElementById(day + '-tasks');
+            if (dayBody) {
+                dayBody.parentNode.removeChild(dayBody);
+                const addTaskButton = document.getElementById(`add-task-${day}`);
+                if (addTaskButton) addTaskButton.parentNode.removeChild(addTaskButton);
+                const removeDayButton = document.getElementById(`remove-day-${day}`);
+                if (removeDayButton) removeDayButton.parentNode.removeChild(removeDayButton);
+            }
+        }
+    </script>
+</body>
+</html>
